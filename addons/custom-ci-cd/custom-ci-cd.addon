@@ -1,0 +1,42 @@
+# Name: custom-ci-cd
+# Description: Setup CI/CD Demo
+# Url: https://github.com/devops-with-openshift
+
+# Create Projects
+oc new-project myproject-test --display-name="My Project (TEST)" --description="Initial developer project TESTING stage."
+oc new-project myproject-prod --display-name="My Project (PROD)" --description="Initial developer project PRODUCTION stage."
+oc new-project cicd --display-name="CI/CD"  --description="CI/CD toolchain."
+
+# Add developer as admin
+oc adm policy add-role-to-user admin developer -n myproject-test
+oc adm policy add-role-to-user admin developer -n myproject-prod
+oc adm policy add-role-to-user admin developer -n cicd
+
+# Grant Jenkins Access to Projects
+oc adm policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n myproject
+oc adm policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n myproject-test
+oc adm policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n myproject-prod
+
+# Allow to pull images from development stage
+oc adm policy add-role-to-user system:image-puller system:serviceaccount:myproject-test:default -n myproject
+oc adm policy add-role-to-user system:image-puller system:serviceaccount:myproject-prod:default -n myproject
+
+
+# Deploy Jenkins to CI/CD project
+oc new-app -n cicd --template=jenkins-ephemeral -p NAMESPACE=openshift -p MEMORY_LIMIT=2048Mi -p ENABLE_OAUTH=true
+
+# Create Pipeline
+oc create -n cicd -f pipeline.yaml
+
+# Create deployment config & expose service for TEST and PROD
+oc create -n myproject-test dc nodejs-mongo-persistent --image=172.30.1.1:5000/myproject/nodejs-mongo-persistent:promoteQA
+oc expose -n myproject-test dc nodejs-mongo-persistent --port=8080
+oc expose -n myproject-test service nodejs-mongo-persistent --name=nodejs-mongo-persistent-test --hostname=nodejs-mongo-persistent-test.#{ip}.nip.io
+oc patch dc/nodejs-mongo-persistent -p '{"spec" : {"template": {"spec" : {"containers" : [{"name" : "default-container", "imagePullPolicy" : "Always"}]}}}}' -n myproject-test
+
+oc create -n myproject-prod dc nodejs-mongo-persistent --image=172.30.1.1:5000/myproject/nodejs-mongo-persistent:promotePRD
+oc expose -n myproject-prod dc nodejs-mongo-persistent --port=8080
+oc expose -n myproject-prod service nodejs-mongo-persistent --name=nodejs-mongo-persistent-test --hostname=nodejs-mongo-persistent-prod.#{ip}.nip.io
+oc patch dc/nodejs-mongo-persistent -p '{"spec" : {"template": {"spec" : {"containers" : [{"name" : "default-container", "imagePullPolicy" : "Always"}]}}}}' -n myproject-prod
+
+

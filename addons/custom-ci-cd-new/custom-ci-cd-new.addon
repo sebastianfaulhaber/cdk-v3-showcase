@@ -1,0 +1,23 @@
+# Name: custom-ci-cd
+# Description: Setup CI/CD Demo
+# Url: https://github.com/OpenShiftDemos/openshift-cd-demo
+
+# OpenShift 3.7 by default uses an older version of Jenkins. Import all Jenkins image tags in order to use the newer Jenkins image for this demo.
+#oc import-image openshift/jenkins --from="registry.access.redhat.com/openshift3/jenkins-2-rhel7" --confirm --all -n openshift
+
+# Create Projects
+oc adm new-project dev --display-name="Tasks - Dev" 
+oc adm new-project stage --display-name="Tasks - Stage"
+oc adm new-project cicd --display-name="CI/CD"
+
+# Add developer as admin
+oc adm policy add-role-to-user admin developer -n dev
+oc adm policy add-role-to-user admin developer -n stage
+oc adm policy add-role-to-user admin developer -n cicd
+
+# Grant Jenkins Access to Projects
+oc policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n dev
+oc policy add-role-to-user edit system:serviceaccount:cicd:jenkins -n stage
+
+# Deploy Pipeline with SonarQube
+oc new-app -n cicd -f https://raw.githubusercontent.com/OpenShiftDemos/openshift-cd-demo/ocp-3.7/cicd-template.yaml
