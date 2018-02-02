@@ -39,4 +39,6 @@ oc expose -n myproject-prod dc nodejs-mongo-persistent --port=8080
 oc expose -n myproject-prod service nodejs-mongo-persistent --name=nodejs-mongo-persistent-test --hostname=nodejs-mongo-persistent-prod.#{ip}.nip.io
 oc patch dc/nodejs-mongo-persistent -p '{"spec" : {"template": {"spec" : {"containers" : [{"name" : "default-container", "imagePullPolicy" : "Always"}]}}}}' -n myproject-prod
 
-
+# Cancel first pipeline build
+sleep 5
+oc delete build pipeline-1 -n cicd
