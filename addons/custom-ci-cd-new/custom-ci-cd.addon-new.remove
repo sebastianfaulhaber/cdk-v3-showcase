@@ -1,8 +1,0 @@
-# Name: custom-ci-cd
-# Description: Setup CI/CD Demo
-# Url: https://github.com/OpenShiftDemos/openshift-cd-demo
-
-# Create Projects
-oc delete project dev
-oc delete project stage
-oc delete project cicd
