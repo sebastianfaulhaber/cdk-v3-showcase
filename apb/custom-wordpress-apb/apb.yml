@@ -1,0 +1,60 @@
+version: 1.0
+name: custom-wordpress-apb
+description: This service will deploy a fully customized and ready to use Wordpress site.
+bindable: False
+async: optional
+metadata:
+  displayName: Custom Wordpress Service
+  providerDisplayName: "ACME, Inc."
+  documentationUrl: "https://www.wordpress.org/" 
+  console.openshift.io/iconClass: icon-wordpress
+plans:
+  - name: default
+    description: Default plan
+    free: True
+    metadata: {}
+    parameters:
+      - name: external_hostname
+        title: External hostname
+        type: string
+        default: www.openshift-anwender.de
+        required: True
+        display_group: "Basic settings"
+      - name: ocp_app_name
+        title: Application ID
+        type: string
+        default: openshift-anwender
+        required: True
+        display_group: "Basic settings"
+      - name: wp_blog_title
+        title: Blog title
+        type: string
+        default: openshift-anwender
+        required: True
+        display_group: "Wordpress settings"
+      - name: wp_options_blogdescription
+        title: Blog description
+        type: string
+        display_type: textarea
+        default: "Die Community Seite für alle Anwender & Interessierte der Red Hat OpenShift Container Plattform"
+        required: True
+        display_group: "Wordpress settings"
+      - name: wp_admin_user
+        title: Admin user
+        type: string
+        default: admin
+        required: True
+        display_group: "Wordpress settings"
+      - name: wp_admin_email
+        title: Admin e-mail
+        type: string
+        default: sebastian.faulhaber@redhat.com
+        required: True
+        display_group: "Wordpress settings"                
+      - name: wp_options_timezone
+        title: Timezone
+        type: enum
+        enum: ["Europe/Berlin", "Europe/London", "UTC"]
+        default: "Europe/Berlin"
+        required: True
+        display_group: "Wordpress settings"
