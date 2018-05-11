@@ -5,7 +5,7 @@
 oc expose service docker-registry -n default
 
 # load registry-console template
-oc create -n default -f https://raw.githubusercontent.com/openshift/openshift-ansible/release-3.7/roles/openshift_hosted_templates/files/v3.7/enterprise/registry-console.yaml
+oc create -n default -f https://raw.githubusercontent.com/openshift/openshift-ansible/master/roles/openshift_hosted_templates/files/v3.10/enterprise/registry-console.yaml
 
 # create passthrough route for registry-console
 oc create route passthrough --service registry-console --port registry-console -n default
