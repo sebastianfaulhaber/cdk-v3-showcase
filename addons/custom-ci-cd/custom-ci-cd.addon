@@ -23,7 +23,7 @@ oc adm policy add-role-to-user system:image-puller system:serviceaccount:myproje
 
 
 # Deploy Jenkins to CI/CD project
-oc new-app -n cicd --template=jenkins-ephemeral -p NAMESPACE=openshift -p MEMORY_LIMIT=2048Mi -p ENABLE_OAUTH=true
+oc new-app -n cicd --template=jenkins-persistent -p NAMESPACE=openshift -p MEMORY_LIMIT=2048Mi -p ENABLE_OAUTH=true
 
 # Create Pipeline
 oc create -n cicd -f pipeline.yaml
