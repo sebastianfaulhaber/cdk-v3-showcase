@@ -3,12 +3,12 @@
 # Url: https://github.com/openshift/openshift-ansible/tree/master/roles/openshift_examples/files/examples/v3.7
 
 docker pull registry.access.redhat.com/rhscl/mongodb-32-rhel7
-docker pull registry.access.redhat.com/rhscl/nodejs-4-rhel7
+docker pull registry.access.redhat.com/rhscl/nodejs-6-rhel7
 docker pull registry.access.redhat.com/jboss-eap-7/eap70-openshift
 
 oc project myproject
 oc import-image my-rhscl/mongodb-32-rhel7 --from=registry.access.redhat.com/rhscl/mongodb-32-rhel7 --confirm
-oc import-image my-rhscl/nodejs-4-rhel7 --from=registry.access.redhat.com/rhscl/nodejs-4-rhel7 --confirm
+oc import-image my-rhscl/nodejs-6-rhel7 --from=registry.access.redhat.com/rhscl/nodejs-4-rhel7 --confirm
 oc import-image my-openshift3/jenkins-2-rhel7 --from=registry.access.redhat.com/openshift3/jenkins-2-rhel7 --confirm
 oc import-image my-jboss-eap-7/eap70-openshift --from=registry.access.redhat.com/jboss-eap-7/eap70-openshift --confirm
 docker pull registry.access.redhat.com/openshift3/jenkins-2-rhel7
